@@ -1,0 +1,86 @@
+# Mock MCP Server Configuration
+# 用于模拟一个符合 MCP 协议的后端服务
+
+server:
+  host: "0.0.0.0"
+  port: 9999
+  base_path: "/mcp"  # 所有 MCP 接口前缀，如 /mcp/tools, /mcp/prompts
+  transport: "StreamableHTTP"  # 支持 StreamableHTTP 和 sse 两种传输方式
+
+manifest:
+  name: "Mock AI Assistant"
+  description: "A mock MCP server for development and testing"
+  version: "1.0.0"
+
+tools:
+  - name: "get_weather"
+    description: "Get current weather for a city"
+    parameters:
+      - name: "city"
+        type: string
+        description: "City name (e.g., 'Beijing')"
+        required: true
+    mock_template: "The current weather in {{city}} is sunny, 25°C."
+
+  - name: "search_web"
+    description: "Search the web for a query (mocked)"
+    parameters:
+      - name: "query"
+        type: string
+        description: "Search keywords"
+        required: true
+    mock_template: "Mock search results for '{{query}}':\n1. Example result\n2. Another result"
+
+prompts:
+  - name: "summarize_article"
+    description: "Summarize a given article in 2 sentences"
+    arguments:
+      - name: "article"
+        description: "Full article text"
+        required: true
+    mock_template: |
+      You are a helpful assistant.
+      Summarize this article in 2 sentences:
+
+      {{article}}
+
+  - name: "translate_to_english"
+    description: "Translate input text to English"
+    arguments:
+      - name: "text"
+        description: "Text to translate"
+        required: true
+    mock_template: |
+      Translate the following text to English:
+
+      {{text}}
+
+resources:
+  - name: "user_profile"
+    description: "User profile data"
+    mime_type: "application/json"
+    uri: "internal://resources/user_profile.json"
+    mock_content: |
+      {
+        "user_id": "{{user_id}}",
+        "name": "Alice",
+        "email": "alice@example.com",
+        "preferences": {
+          "theme": "dark",
+          "lang": "en"
+        }
+      }
+
+  - name: "system_docs"
+    description: "Internal system documentation"
+    mime_type: "text/markdown"
+    uri: "https://example.com/docs.md"
+    mock_content: |
+      # System Documentation
+
+      This is a mock documentation file served via MCP Resource.
+
+      ## Features
+      - Tool calling
+      - Prompt templating
+      - Resource access
