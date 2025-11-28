@@ -50,7 +50,7 @@ func main() {
 	switch config.Server.Transport {
 	case "sse":
 		// 启动SSE服务器
-		sseServer := server.NewStreamableHTTPServer(s)
+		sseServer := server.NewSSEServer(s)
 		if err := sseServer.Start(addr); err != nil {
 			log.Fatal(err)
 		}
